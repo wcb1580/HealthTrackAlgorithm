@@ -1,30 +1,14 @@
-import pika
-import json
-import base64
-# Store Username and Passwords for Rabbitmq
-credentials = pika.PlainCredentials('asufhiwegn5', 'fioha7kasw')
-# Create a connection
-connection = pika.BlockingConnection(pika.ConnectionParameters('43.128.85.111',5672,'/',credentials))
-# Create connection queue
-ch = connection.channel()
-def receive(ch, method, properties, body):
-    message = body.decode()
-    print("Received %r" % message)
-    # Process the message and prepare a response
-    response = 'Received'
-    # Convert the response to a JSON string
-    #response_json = json.dumps(response)
+from Connection import RabbitMQConnection
+from Receive import RabbitMQReceiver
 
-    # Construct received coorelation_id
-    prop=pika.BasicProperties(correlation_id=properties.correlation_id)
-    # Send the response back to RabbitMQ
-    ch.basic_publish(exchange='', routing_key=properties.reply_to, properties=prop, body=response.encode('utf-8'))
 
-queue_name = 'algorithm_input_queue'
-ch.basic_consume(queue=queue_name, on_message_callback=receive, auto_ack=False)
+def main():
+    ch = RabbitMQConnection('asufhiwegn5', 'fioha7kasw', '43.128.85.111', 5672, '/')
+    receiver = RabbitMQReceiver(ch.get_channel(), 'algorithm_input_queue')
+    receiver.Start_receiving()
 
-print('Waiting for messages. To exit press CTRL+C')
-ch.start_consuming()
+if __name__ == "__main__":
+    main()
 
 
 # Create a queue

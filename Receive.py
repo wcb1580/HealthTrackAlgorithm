@@ -1,5 +1,5 @@
 import pika
-"The file receive the message from RabbitMQ and provide a response to it"
+"Receive the message from RabbitMQ and provide a response to it"
 class RabbitMQReceiver:
     def __init__(self, channel, queuename):
         self.channel = channel
@@ -11,7 +11,6 @@ class RabbitMQReceiver:
         response = 'Received'
         # Convert the response to a JSON string
         #response_json = json.dumps(response)
-
         # Construct received coorelation_id
         prop=pika.BasicProperties(correlation_id=properties.correlation_id)
         # Send the response back to RabbitMQ

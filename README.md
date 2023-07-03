@@ -11,4 +11,4 @@
 - Execution file
 # Algorithm.py:
 
--Machine Learning Model
+- Machine Learning Model
